@@ -11,8 +11,12 @@ import json
 import os
 from pathlib import Path
 import tempfile
+import platform
 BASE_DIR = Path(__file__).resolve().parent.parent
-MOTOR_PATH = BASE_DIR / "motor_adn.exe" 
+if platform.system() == "Windows":
+    motor_cmd = "./motor_adn.exe"
+else:
+    motor_cmd = "./motor_adn"
 
 app = FastAPI(title="ADN Forensics API")
 app.add_middleware(
@@ -150,7 +154,7 @@ async def search(
     try:
         # Ejecutar motor C++
         cmd = [
-            str(MOTOR_PATH),
+            motor_cmd,
             "--algorithm", algorithm,
             "--pattern", pattern,
             "--csv", tmp_path
