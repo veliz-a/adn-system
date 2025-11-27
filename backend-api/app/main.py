@@ -1,6 +1,7 @@
 from fastapi import FastAPI, HTTPException, Depends, UploadFile, File, Header
 from fastapi.security import HTTPBearer, HTTPAuthorizationCredentials
-from fastapi.middleware.cors import CORSMiddleware 
+from fastapi.middleware.cors import CORSMiddleware
+from fastapi import Form
 from sqlalchemy.orm import Session
 from app.models import SessionLocal, User, SearchHistory, init_db
 from app.auth import hash_password, verify_password, create_access_token, decode_token
@@ -126,29 +127,29 @@ def upload_csv(
     }
 
 @app.post("/search")
-def search(
-    req: SearchRequest,
+async def search(
+    pattern: str = Form(...),
+    algorithm: str = Form(...),
     csv_file: UploadFile = File(...),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
 ):
     # Validar algoritmo
-    if req.algorithm not in ["kmp", "rabin_karp"]:
+    if algorithm not in ["kmp", "rabin_karp"]:
         raise HTTPException(status_code=400, detail="Algoritmo debe ser 'kmp' o 'rabin_karp'")
     
     # Guardar CSV temporalmente
     with tempfile.NamedTemporaryFile(mode='w', suffix='.csv', delete=False) as tmp:
-        content = csv_file.file.read().decode('utf-8')
-        tmp.write(content)
+        content = await csv_file.read()
+        tmp.write(content.decode('utf-8'))
         tmp_path = tmp.name
     
     try:
-        # Ejecutar motor C++ (ajusta la ruta según tu sistema)
+        # Ejecutar motor C++
         cmd = [
-            "./motor_adn.exe",  # Windows
-            # "./motor_adn",    # Linux/Mac
-            "--algorithm", req.algorithm,
-            "--pattern", req.pattern,
+            "./motor_adn.exe",  # ajusta la ruta
+            "--algorithm", algorithm,
+            "--pattern", pattern,
             "--csv", tmp_path
         ]
         
@@ -156,20 +157,19 @@ def search(
             cmd,
             capture_output=True,
             text=True,
-            timeout=300  # 5 minutos máximo
+            timeout=300
         )
         
         if result.returncode != 0:
             raise HTTPException(status_code=500, detail=f"Error del motor: {result.stderr}")
         
-        # Parsear JSON del motor
         motor_output = json.loads(result.stdout)
         
         # Guardar en BD
         search = SearchHistory(
             user_id=user.id,
-            pattern=req.pattern,
-            algorithm=req.algorithm,
+            pattern=pattern,
+            algorithm=algorithm,
             csv_filename=csv_file.filename,
             results=motor_output,
             match_count=motor_output.get("match_count", 0),
@@ -181,11 +181,10 @@ def search(
         return motor_output
         
     except subprocess.TimeoutExpired:
-        raise HTTPException(status_code=504, detail="Timeout: el motor tardó más de 5 minutos")
-    except json.JSONDecodeError:
-        raise HTTPException(status_code=500, detail="Respuesta inválida del motor")
+        raise HTTPException(status_code=504, detail="Timeout")
+    except json.JSONDecodeError as e:
+        raise HTTPException(status_code=500, detail=f"JSON inválido del motor: {result.stdout}")
     finally:
-        # Limpiar archivo temporal
         os.unlink(tmp_path)
 
 @app.get("/history")
