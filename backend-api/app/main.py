@@ -13,10 +13,7 @@ from pathlib import Path
 import tempfile
 import platform
 BASE_DIR = Path(__file__).resolve().parent.parent
-if platform.system() == "Windows":
-    motor_cmd = "./motor_adn.exe"
-else:
-    motor_cmd = "./motor_adn"
+MOTOR_PATH = BASE_DIR / ("motor_adn.exe" if os.name == "nt" else "motor_adn")
 
 app = FastAPI(title="ADN Forensics API")
 app.add_middleware(
@@ -154,7 +151,7 @@ async def search(
     try:
         # Ejecutar motor C++
         cmd = [
-            motor_cmd,
+            str(MOTOR_PATH),
             "--algorithm", algorithm,
             "--pattern", pattern,
             "--csv", tmp_path
