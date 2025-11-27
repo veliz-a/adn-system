@@ -1,0 +1,230 @@
+# ============================================
+# PROYECTO ADN FORENSICS - .gitignore
+# ============================================
+
+# ============================================
+# MOTOR C++
+# ============================================
+
+# Build artifacts
+motor-cpp/build/
+motor-cpp/cmake-build-*/
+motor-cpp/out/
+
+# Compiled binaries
+*.exe
+*.out
+*.app
+*.o
+*.obj
+*.so
+*.dylib
+*.dll
+
+# CMake
+CMakeCache.txt
+CMakeFiles/
+cmake_install.cmake
+install_manifest.txt
+compile_commands.json
+CTestTestfile.cmake
+
+# IDE - C++
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+
+# ============================================
+# BACKEND API (Python)
+# ============================================
+
+# Virtual environments
+backend-api/venv/
+backend-api/env/
+backend-api/.venv/
+backend-api/.env/
+backend-api/ENV/
+backend-api/env.bak/
+backend-api/venv.bak/
+
+# Python
+*.py[cod]
+*$py.class
+__pycache__/
+*.so
+.Python
+*.egg-info/
+dist/
+build/
+*.egg
+
+# Environment variables
+.env
+.env.local
+.env.production
+.env.development
+backend-api/.env
+
+# Testing
+.pytest_cache/
+.coverage
+htmlcov/
+.tox/
+*.cover
+.hypothesis/
+
+# Logs
+*.log
+logs/
+
+# ============================================
+# FRONTEND (React + Vite)
+# ============================================
+
+# Dependencies
+frontend-web/node_modules/
+frontend-web/.pnp
+frontend-web/.pnp.js
+
+# Production build
+frontend-web/dist/
+frontend-web/build/
+
+# Environment variables
+frontend-web/.env
+frontend-web/.env.local
+frontend-web/.env.production
+frontend-web/.env.development
+
+# Testing
+frontend-web/coverage/
+
+# Logs
+frontend-web/npm-debug.log*
+frontend-web/yarn-debug.log*
+frontend-web/yarn-error.log*
+frontend-web/pnpm-debug.log*
+
+# IDE
+frontend-web/.vscode/
+frontend-web/.idea/
+
+# ============================================
+# DATASETS Y ARCHIVOS TEMPORALES
+# ============================================
+
+# Dataset original del docente (puede ser grande)
+datasets/DataSet.xlsx
+
+# CSVs generados (excepto el limpio que es necesario)
+datasets/*.csv
+!datasets/sospechosos_1000.csv
+
+# Archivos temporales de procesamiento
+datasets/temp/
+datasets/*.tmp
+datasets/*.bak
+
+# Reportes de limpieza (si son muy grandes)
+datasets/*_report.txt
+
+# ============================================
+# TESTS E INTEGRACIÓN
+# ============================================
+
+# Datasets de prueba generados
+tests-integration/datasets/*.csv
+tests-integration/temp/
+
+# Resultados de benchmarks
+tests-integration/results/*.json
+tests-integration/results/*.png
+tests-integration/results/*.csv
+
+# Cache de pytest
+tests-integration/.pytest_cache/
+tests-integration/__pycache__/
+
+# ============================================
+# DOCUMENTACIÓN
+# ============================================
+
+# Archivos temporales de Office
+docs/~$*.docx
+docs/~$*.pptx
+docs/*.tmp
+
+# Backups
+docs/*.backup
+docs/*_OLD.*
+
+# ============================================
+# SISTEMA OPERATIVO
+# ============================================
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# ============================================
+# ENTREGABLES (NO IGNORAR)
+# ============================================
+
+# Estos archivos SÍ deben subirse
+!docs/01_Informe.docx
+!docs/02_Presentacion.pptx
+!README.md
+!motor-cpp/src/
+!backend-api/app/
+!frontend-web/src/
+
+# ============================================
+# CLOUD & DEPLOYMENT
+# ============================================
+
+# Railway
+.railway/
+
+# Vercel
+frontend-web/.vercel
+
+# ============================================
+# OTROS
+# ============================================
+
+# Archivos comprimidos (excepto entrega final)
+*.zip
+*.7z
+*.tar.gz
+*.rar
+!Equipo03.7z
+
+# Configuraciones locales
+.local/
+*.local
+
+# Secrets (NUNCA subir)
+*secret*
+*password*
+*credentials*
+*.pem
+*.key
+*.cert
+
+# Jupyter notebooks (extra)
+*.ipynb_checkpoints/
