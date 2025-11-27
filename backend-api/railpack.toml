@@ -5,7 +5,9 @@ engine = "python"
 aptPkgs = ["build-essential"]
 
 cmds = [
-  "g++ motor-cpp/src/*.cpp -std=c++17 -O3 -pthread -o motor_adn"
+  "echo Compilando motor C++...",
+  "g++ motor-cpp/src/*.cpp -std=c++17 -O3 -pthread -o motor_adn",
+  "ls -la"
 ]
 
 [start]
