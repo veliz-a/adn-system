@@ -134,9 +134,7 @@ async def search(
     csv_file: UploadFile = File(...),
     user: User = Depends(get_current_user),
     db: Session = Depends(get_db)
-):  
-    print("Archivos en /app:", os.listdir("/app"))
-
+):
     # Validar algoritmo
     if algorithm not in ["kmp", "rabin_karp"]:
         raise HTTPException(status_code=400, detail="Algoritmo debe ser 'kmp' o 'rabin_karp'")
@@ -150,7 +148,7 @@ async def search(
     try:
         # Ejecutar motor C++
         cmd = [
-            "./motor_adn",  # ajusta la ruta
+            "./motor_adn.exe",  # ajusta la ruta
             "--algorithm", algorithm,
             "--pattern", pattern,
             "--csv", tmp_path
