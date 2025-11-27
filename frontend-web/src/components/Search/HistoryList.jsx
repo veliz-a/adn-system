@@ -1,47 +1,30 @@
-import React, { useEffect, useState } from "react";
+import { useState, useEffect } from "react";
 import api from "../../api/axios";
 
 export default function HistoryList() {
-  const [history, setHistory] = useState([]);
+    const [history, setHistory] = useState([]);
 
-  useEffect(() => {
-    const fetchHistory = async () => {
-      try {
-        const res = await api.get("/history?limit=10&offset=0");
-        setHistory(res.data.searches || res.data);
-      } catch (error) {
-        console.error(error);
-      }
-    };
+    useEffect(() => {
+        api.get("/history?limit=10").then((res) => setHistory(res.data.searches));
+    }, []);
 
-    fetchHistory();
-  }, []);
-
-  return (
-    <div className="bg-gray-800 p-6 rounded-xl shadow-lg border border-gray-700">
-      <h3 className="text-xl text-blue-400 font-semibold mb-4">Historial</h3>
-
-      {!history.length && (
-        <p className="text-gray-400">No hay búsquedas recientes.</p>
-      )}
-
-      <ul className="space-y-3">
-        {history.map((item) => (
-          <li
-            key={item.id}
-            className="p-3 bg-gray-700 rounded border border-gray-600 text-gray-300"
-          >
-            <div className="font-medium">
-              {item.pattern} — {item.algorithm}
-            </div>
-            <div className="text-sm text-gray-400">
-              Coincidencias: {item.match_count}
-            </div>
-          </li>
-        ))}
-      </ul>
-    </div>
-  );
+    return (
+        <div className="bg-gray-800 p-6 rounded-lg">
+            <h3 className="text-xl font-bold mb-4">Historial</h3>
+            {history.length === 0 ? (
+                <p className="text-gray-400">Sin búsquedas previas</p>
+            ) : (
+                <ul className="space-y-2">
+                    {history.map((h) => (
+                        <li key={h.id} className="bg-gray-700 p-3 rounded">
+                            <div className="text-white">{h.pattern} - {h.algorithm}</div>
+                            <div className="text-gray-400 text-sm">
+                                {h.match_count} coincidencias | {h.execution_time_ms}ms
+                            </div>
+                        </li>
+                    ))}
+                </ul>
+            )}
+        </div>
+    );
 }
-
-

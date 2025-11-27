@@ -1,32 +1,45 @@
-import React from "react";
-import { Routes, Route, Navigate } from "react-router-dom";
-
+import { useState, useEffect } from "react";
 import Login from "./components/AuthForm/Login";
 import Register from "./components/AuthForm/Register";
 import Dashboard from "./pages/Dashboard";
 
-function PrivateRoute({ children }) {
-  const token = localStorage.getItem("token");
-  return token ? children : <Navigate to="/login" replace />;
-}
-
 export default function App() {
-  return (
-    <Routes>
-      <Route path="/" element={<Navigate to="/dashboard" replace />} />
+    const [token, setToken] = useState(localStorage.getItem("token"));
+    const [showRegister, setShowRegister] = useState(false);
 
-      <Route path="/login" element={<Login />} />
-      <Route path="/register" element={<Register />} />
+    if (token) return <Dashboard />;
 
-      <Route
-        path="/dashboard"
-        element={
-          <PrivateRoute>
-            <Dashboard />
-          </PrivateRoute>
-        }
-      />
-    </Routes>
-  );
+    return (
+        <div className="min-h-screen bg-gray-900 flex items-center justify-center p-4">
+            <div className="bg-gray-800 p-8 rounded-lg shadow-xl max-w-md w-full">
+                {showRegister ? (
+                    <>
+                        <Register onSuccess={() => setShowRegister(false)} />
+                        <p className="text-gray-400 mt-4 text-center">
+                            ¿Ya tienes cuenta?{" "}
+                            <button
+                                onClick={() => setShowRegister(false)}
+                                className="text-blue-400"
+                            >
+                                Iniciar sesión
+                            </button>
+                        </p>
+                    </>
+                ) : (
+                    <>
+                        <Login onSuccess={() => setToken(localStorage.getItem("token"))} />
+                        <p className="text-gray-400 mt-4 text-center">
+                            ¿No tienes cuenta?{" "}
+                            <button
+                                onClick={() => setShowRegister(true)}
+                                className="text-blue-400"
+                            >
+                                Registrarse
+                            </button>
+                        </p>
+                    </>
+                )}
+            </div>
+        </div>
+    );
 }
-

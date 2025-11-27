@@ -18,7 +18,7 @@ MOTOR_PATH = BASE_DIR / ("motor_adn.exe" if os.name == "nt" else "motor_adn")
 app = FastAPI(title="ADN Forensics API")
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["https://adn-forensics-system.vercel.app"],  # en producción usar ["https://mi-frontend.vercel.app"]
+    allow_origins=["https://adn-system-kceyd0tx5-velizs-projects.vercel.app"],  # en producción usar ["https://mi-frontend.vercel.app"]
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

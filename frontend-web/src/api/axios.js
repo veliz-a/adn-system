@@ -1,35 +1,27 @@
-import axios from 'axios';
-const API_URL = import.meta.env.VITE_API_URL; 
+import axios from "axios";
+
 const api = axios.create({
-    baseURL: API_URL,
-    timeout: 60000, 
-    headers: {
-        'Content-Type': 'application/json',
-    },
+    baseURL: import.meta.env.VITE_API_URL || "http://localhost:8000",
 });
 
-api.interceptors.request.use(
-    (config) => {
-        const token = localStorage.getItem('jwt_token'); 
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
-        }
-        return config;
-    },
-    (error) => {
-        return Promise.reject(error);
+// Interceptor: agregar token automáticamente
+api.interceptors.request.use((config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+        config.headers.Authorization = `Bearer ${token}`;
     }
-);
+    return config;
+});
 
+// Interceptor: logout si 401
 api.interceptors.response.use(
     (response) => response,
     (error) => {
-        if (error.response && error.response.status === 401) {
-            console.error("Token expirado o inválido. Redirigiendo a Login.");
-            localStorage.removeItem('jwt_token'); 
-            window.location.href = '/login'; 
+        if (error.response?.status === 401) {
+            localStorage.removeItem("token");
+            window.location.href = "/";
         }
-        return Promise.reject(error); 
+        return Promise.reject(error);
     }
 );
 

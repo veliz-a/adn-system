@@ -1,32 +1,34 @@
-import React from "react";
-import PrivateLayout from "../components/Layout/PrivateLayout";
+import { useState } from "react";
 import SearchForm from "../components/Search/SearchForm";
 import ResultsView from "../components/Search/ResultsView";
 import HistoryList from "../components/Search/HistoryList";
 
 export default function Dashboard() {
-  return (
-    <PrivateLayout>
-      <div className="mb-8">
-        <h1 className="text-4xl font-bold text-white">Dashboard</h1>
-        <p className="text-gray-400 mt-1">
-          Gestiona tus análisis de ADN y visualiza resultados.
-        </p>
-      </div>
+    const [results, setResults] = useState(null);
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-        <div className="space-y-6">
-          <SearchForm />
+    return (
+        <div className="min-h-screen bg-gray-900 text-white p-8">
+            <h1 className="text-3xl font-bold mb-8">Sistema Forense ADN</h1>
+            <button
+                onClick={() => {
+                    localStorage.removeItem("token");
+                    window.location.reload();
+                }}
+                className="mb-4 bg-red-600 px-4 py-2 rounded"
+            >
+                Cerrar Sesión
+            </button>
+
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <SearchForm onResults={setResults} />
+                <HistoryList />
+            </div>
+
+            {results && (
+                <div className="mt-6">
+                    <ResultsView data={results} />
+                </div>
+            )}
         </div>
-
-        <div>
-          <HistoryList />
-        </div>
-      </div>
-
-      <div className="mt-8">
-        <ResultsView />
-      </div>
-    </PrivateLayout>
-  );
+    );
 }
