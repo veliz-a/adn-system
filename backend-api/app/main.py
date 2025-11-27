@@ -147,7 +147,7 @@ async def search(
     try:
         # Ejecutar motor C++
         cmd = [
-            "./motor_adn.exe",  # ajusta la ruta
+            "./motor_adn",  # ajusta la ruta
             "--algorithm", algorithm,
             "--pattern", pattern,
             "--csv", tmp_path
