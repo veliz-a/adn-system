@@ -6,8 +6,8 @@ aptPkgs = ["build-essential"]
 
 cmds = [
   "echo Compilando motor C++...",
-  "g++ motor-cpp/src/*.cpp -std=c++17 -O3 -pthread -o motor_adn",
-  "ls -la"
+  "g++ motor-cpp/src/*.cpp -std=c++17 -O3 -pthread -o /app/motor_adn",
+  "ls -la /app"
 ]
 
 [start]
